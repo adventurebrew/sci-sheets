@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <style>
+    #panel {
+      padding: 1em 0.5em;
+    }
+
+    .button {
+      background: silver;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      padding: 5px;
+      border: 1px solid gray;
+    }
+
+    .button:hover, .button:active {
+      color: inherit;
+    }
+  </style>
+  <body>
+    <div id="panel">
+      <a id="downloadAsZip" href="data:text/csv,aaa,bbb,ccc" download="test.zip" target=_blank class="button">Download as ZIP</a>
+    </div>  
+  </body>
+</html>

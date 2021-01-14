@@ -1,6 +1,8 @@
+const SCI: string = 'SCI';
+
 function onOpen() {
   SpreadsheetApp.getUi()
-    .createMenu('SCI')
+    .createMenu(SCI)
     .addItem('Show sidebar', 'showSidebar')
     .addToUi();
 }

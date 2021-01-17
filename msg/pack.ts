@@ -1,5 +1,5 @@
-import {TranslationLine} from "../types/SCI";
-import {writeUint16, writeUint8, writeWin1255} from "../utils/binary";
+import {MsgResource, TranslationLine} from "../types/SCI";
+import {writeUint16, writeUint32, writeUint8} from "../utils/binary";
 
 export type PackOptions = {
     encoding: 'ascii' | 'win1255';
@@ -12,18 +12,12 @@ function sumOf<T>(arr: T[], fn: (x: T, i: number, a: T[]) => number): number {
     return sum;
 }
 
-export function pack(lines: TranslationLine[], options: PackOptions): Uint8Array {
-    const strLength = (line: TranslationLine) => line.text.length + 1;
-    const output = new Uint8Array(10 + lines.length * 10 + sumOf(lines, strLength));
-    writeUint16(output, 0, 0x008F);
-    writeUint16(output, 2, 0x0D0C);
-
-    const totalSize = lines.reduce((size, line) => {
-        return size + (line.text.length + 10 + 1);
-    }, 0);
-
-    writeUint16(output, 6, totalSize + 2);
-    writeUint16(output, 8, lines.length);
+const strLen = (line: string) => line.length + 1;
+export function packMSG(msg: MsgResource, options: PackOptions): Uint8Array {
+    const output = new Uint8Array(10 + msg.data.nEntries * 10 + sumOf(msg.strings, strLen));
+    writeUint32(output, 0, 0xD0C008F);
+    writeUint16(output, 6, output.length);
+    writeUint16(output, 8, msg.strings.length);
 
     for (let index = 0, s_offset = 10 + (lines.length) * 10; index < lines.length; index++) {
         const offset = 10 + index * 10;

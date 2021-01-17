@@ -1,63 +1,61 @@
-import {CharMapper, fromASCII, fromWin1255, toASCII, toWin1255} from "./encodings";
+import {ENCODINGS, LegacyEncoding} from "./encodings";
 
 export function readUint8(buf: Uint8Array, offset: number): Uint8 {
-    return buf[offset];
+  return buf[offset];
 }
 
 export function readUint16(buf: Uint8Array, offset: number): Uint16 {
-    const lower = readUint8(buf, offset);
-    const higher = readUint8(buf, offset + 1);
+  const lower = readUint8(buf, offset);
+  const higher = readUint8(buf, offset + 1);
 
-    return (higher << 8) | lower;
+  return (higher << 8) | lower;
 }
 
-function readAscii(buffer: Uint8Array, offset: number): string {
-    return readString(fromASCII, buffer, offset);
+export function readUint32(buf: Uint8Array, offset: number): Uint32 {
+  const lower = readUint16(buf, offset);
+  const higher = readUint16(buf, offset + 2);
+
+  return (higher << 16) | lower;
 }
 
-function readWin1255(buffer: Uint8Array, offset: number): string {
-    return readString(fromWin1255, buffer, offset);
-}
+export function readString(encoding: LegacyEncoding, buffer: Uint8Array, offset: number): string {
+  let i: number;
 
-function readString(decodeChar: CharMapper, buffer: Uint8Array, offset: number): string {
-    let i: number;
+  const end = buffer.indexOf(0, offset);
+  const bytes = buffer.slice(offset, end);
+  const n = bytes.length;
+  const decodeChar = ENCODINGS[encoding].from;
 
-    const end = buffer.indexOf(0, offset);
-    const bytes = buffer.slice(offset, end);
-    const n = bytes.length;
+  for (i = 0; i < n; i++) {
+    bytes[i] = decodeChar(bytes[i]);
+  }
 
-    for (i = 0; i < n; i++) {
-        bytes[i] = decodeChar(bytes[i]);
-    }
-
-    return String.fromCharCode.apply(null, bytes);
+  return String.fromCharCode.apply(null, bytes);
 }
 
 export function writeUint8(buf: Uint8Array, offset: number, value: number): void {
-    buf[offset] = value;
+  buf[offset] = value;
 }
 
 export function writeUint16(buf: Uint8Array, offset: number, value: number): void {
-    writeUint8(buf, offset, value);
-    writeUint8(buf, offset + 1, value >> 8);
+  writeUint8(buf, offset, value);
+  writeUint8(buf, offset + 1, value >> 8);
 }
 
-export function writeAscii(buf: Uint8Array, offset: number, value: string): void {
-    writeString(toASCII, buf, offset, value);
+export function writeUint32(buf: Uint8Array, offset: number, value: number): void {
+  writeUint16(buf, offset, value);
+  writeUint16(buf, offset + 2, value >> 16);
 }
 
-export function writeWin1255(buf: Uint8Array, offset: number, value: string): void {
-    writeString(toWin1255, buf, offset, value);
-}
+export function writeString(encoding: LegacyEncoding, buf: Uint8Array, offset: number, value: string): void {
+  let n: number = value.length;
+  let code: number = 0;
 
-function writeString(encodeChar: CharMapper, buf: Uint8Array, offset: number, value: string): void {
-    let n: number = value.length;
-    let code: number = 0;
+  const encodeChar = ENCODINGS[encoding].to;
+  for (let i = 0; i < n; i++) {
+    code = value.charCodeAt(i);
+    writeUint8(buf, offset + i, encodeChar(code));
+  }
 
-    for (let i = 0; i < n; i++) {
-        code = value.charCodeAt(i);
-        writeUint8(buf, offset + i, encodeChar(code));
-    }
-
-    buf[offset + n] = 0;
+  buf[offset + n] = 0;
 }

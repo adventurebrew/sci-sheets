@@ -1,5 +1,5 @@
-import {unpackMSG} from './unpack';
-import {packMSG} from "./pack";
+import {unpackMSG, unpackTranslation} from './unpack';
+import {packMSG, packTranslation} from "./pack";
 
 describe('pack-unpack test', () => {
   const MSG95 = Buffer.from(
@@ -32,11 +32,26 @@ describe('pack-unpack test', () => {
     `AAAAAAAAAAAAAAAAAAAAAAAA`, 'base64'
   );
 
-  it('should unpack and pack a message resource file', () => {
-    const msg = unpackMSG(MSG95, 'ascii');
-    expect(msg).toMatchSnapshot('unpacked');
+  it('should unpack a message resource file', () => {
+    const msg = unpackMSG(MSG95, { encoding: 'ascii' });
+    expect(msg).toMatchSnapshot();
+  });
 
-    const binary = packMSG(msg, 'ascii');
-    expect(binary).toEqual(MSG95);
+  it('should pack a message resource file back', () => {
+    const msg = unpackMSG(MSG95, { encoding: 'ascii' });
+    const buffer = packMSG(msg, { encoding: 'ascii' });
+    expect(Buffer.from(buffer)).toEqual(MSG95);
+  });
+
+  it('should convert a message resource file to translations', () => {
+    const translation = unpackTranslation(MSG95, { encoding: 'ascii' });
+    expect(translation).toMatchSnapshot();
+  });
+
+  it('should convert a message resource to translations and back again', () => {
+    const translation = unpackTranslation(MSG95, { encoding: 'ascii' });
+    const buffer = packTranslation(translation, { encoding: 'ascii' });
+
+    expect(Buffer.from(buffer)).toEqual(MSG95);
   });
 });

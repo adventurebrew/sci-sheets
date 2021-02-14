@@ -25,6 +25,14 @@ export type IndexEntry = {
 };
 
 export type TranslationLine = {
-  entry: IndexEntry;
+  index: number;
+  noun: number;
+  verb: number;
+  condition: number;
+  sequence: number;
+  talker: number;
+  refNoun: number;
+  refVerb: number;
+  refCond: number;
   text: string;
 };

@@ -1,3 +1,5 @@
+import { Uint8, Uint16, Uint32, Uchar } from "./primitives";
+
 export type MsgResource = {
   data: MsgData;
   strings: string[];
@@ -25,7 +27,6 @@ export type IndexEntry = {
 };
 
 export type TranslationLine = {
-  index: number;
   noun: number;
   verb: number;
   condition: number;
@@ -35,4 +36,8 @@ export type TranslationLine = {
   refVerb: number;
   refCond: number;
   text: string;
+};
+
+export type TranslationLineWithResourceId = TranslationLine & {
+  resource: number;
 };

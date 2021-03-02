@@ -1,4 +1,5 @@
-import {ENCODINGS, LegacyEncoding} from "./encodings";
+import {ENCODINGS, LegacyEncoding} from './encodings';
+import { Uint8, Uint16, Uint32 } from '../types/primitives';
 
 export function readUint8(buf: Uint8Array, offset: number): Uint8 {
   return buf[offset];

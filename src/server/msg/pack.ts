@@ -6,7 +6,7 @@ import {
   writeUint8
 } from "../utils/binary";
 import {sumOf} from "../utils/collections";
-import {PackOptions, SIZE_ENTRY, SIZE_HEADER} from "../common";
+import {PackOptions, SIZE_ENTRY, SIZE_HEADER} from "./common";
 
 const getZeroTerminatedStringLength = (line: string) => line.length + 1;
 
@@ -58,7 +58,7 @@ export function packMSG(msg: MsgResource, options: PackOptions): Uint8Array {
     + sumOf(msg.strings, getZeroTerminatedStringLength);
 
   const output = new Uint8Array(fileSize);
-  writeUint32(output, 0, 0xD0C008F);
+  writeUint32(output, 0, msg.data.version);
   writeUint16(output, 6, output.length);
   writeUint16(output, 8, msg.strings.length);
 

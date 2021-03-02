@@ -1,6 +1,6 @@
-import {IndexEntry, MsgData, MsgResource, TranslationLine} from "../types/SCI";
-import {readString, readUint16, readUint32, readUint8} from "../utils/binary";
-import {PackOptions, SIZE_ENTRY, SIZE_HEADER} from "../common";
+import {IndexEntry, MsgData, MsgResource, TranslationLine} from '../types/SCI';
+import {readString, readUint16, readUint32, readUint8} from '../utils/binary';
+import {PackOptions, SIZE_ENTRY, SIZE_HEADER} from './common';
 
 export function unpackTranslation(buffer: Uint8Array, options: PackOptions) {
   return msg2translation(unpackMSG(buffer, options));
@@ -33,7 +33,6 @@ export function msg2translation(msg: MsgResource): TranslationLine[] {
     entry = msg.data.entries[index];
 
     lines[index] = {
-      index,
       noun: entry.noun,
       verb: entry.verb,
       condition: entry.condition,

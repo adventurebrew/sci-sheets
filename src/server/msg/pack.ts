@@ -5,8 +5,8 @@ import {
   writeUint32,
   writeUint8
 } from "../utils/binary";
-import {sumOf} from "../utils/collections";
 import {PackOptions, SIZE_ENTRY, SIZE_HEADER} from "./common";
+import {sumOf} from "../utils/collections";
 
 const getZeroTerminatedStringLength = (line: string) => line.length + 1;
 

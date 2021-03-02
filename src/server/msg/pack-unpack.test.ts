@@ -6,6 +6,7 @@ import {packMSG, packTranslation} from "./pack";
 
 describe('pack-unpack test', () => {
   describe.each([
+    '29.msg',
     '95.msg',
     '301.msg',
     '302.msg',
@@ -23,26 +24,26 @@ describe('pack-unpack test', () => {
     });
 
     it('should unpack a message resource file', () => {
-      const msg = unpackMSG(binaryData, { encoding: 'ascii' });
+      const msg = unpackMSG(binaryData, { encoding: 'win1255' });
       expect(msg).toMatchSnapshot();
     });
 
     it('should pack a message resource file back', () => {
-      const msg = unpackMSG(binaryData, { encoding: 'ascii' });
-      const buffer = packMSG(msg, { encoding: 'ascii' });
-      const msg2 = unpackMSG(buffer, { encoding: 'ascii' });
+      const msg = unpackMSG(binaryData, { encoding: 'win1255' });
+      const buffer = packMSG(msg, { encoding: 'win1255' });
+      const msg2 = unpackMSG(buffer, { encoding: 'win1255' });
       msg2.data.lastMsgNum = msg.data.lastMsgNum; // no idea why they do not match
       expect(msg2).toEqual(msg);
     });
 
     it('should convert a message resource file to translations', () => {
-      const translation = unpackTranslation(binaryData, { encoding: 'ascii' });
+      const translation = unpackTranslation(binaryData, { encoding: 'win1255' });
       expect(translation).toMatchSnapshot();
     });
 
     it('should convert a message resource to translations and back again', () => {
-      const translation = unpackTranslation(binaryData, { encoding: 'ascii' });
-      const buffer = packTranslation(translation, { encoding: 'ascii' });
+      const translation = unpackTranslation(binaryData, { encoding: 'win1255' });
+      const buffer = packTranslation(translation, { encoding: 'win1255' });
 
       buffer[6] = binaryData[6]; // no idea why lastMsgNum is different
       buffer[7] = binaryData[7]; // no idea why lastMsgNum is different

@@ -26,12 +26,13 @@ export function readString(encoding: LegacyEncoding, buffer: Uint8Array, offset:
   const bytes = buffer.slice(offset, end);
   const n = bytes.length;
   const decodeChar = ENCODINGS[encoding].from;
+  let decoded = '';
 
   for (i = 0; i < n; i++) {
-    bytes[i] = decodeChar(bytes[i]);
+    decoded += String.fromCharCode(decodeChar(bytes[i]));
   }
 
-  return String.fromCharCode.apply(null, bytes);
+  return decoded;
 }
 
 export function writeUint8(buf: Uint8Array, offset: number, value: number): void {
